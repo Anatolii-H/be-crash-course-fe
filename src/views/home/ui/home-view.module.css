@@ -1,0 +1,25 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main {
+  flex: 1;
+}
+
+.blogWrapper {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
+  gap: var(--mantine-spacing-md);
+}
+
+.filtersWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.paginationRoot {
+  margin-top: var(--mantine-spacing-xl);
+}

@@ -1,0 +1,9 @@
+.wrapper {
+  background-color: gray;
+  border-radius: 15px;
+  height: 27rem;
+  padding: 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
