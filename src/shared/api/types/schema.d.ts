@@ -293,6 +293,30 @@ export interface paths {
       };
     };
   };
+  "/api/user/": {
+    get: {
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              /** Format: uuid */
+              id: string;
+              sub: string;
+              firstName: string;
+              lastName: string;
+              /** Format: email */
+              email: string;
+              /** Format: date-time */
+              createdAt: string;
+              /** Format: date-time */
+              updatedAt: string;
+            };
+          };
+        };
+      };
+    };
+  };
 }
 
 export type webhooks = Record<string, never>;

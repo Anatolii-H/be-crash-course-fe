@@ -1,3 +1,5 @@
 export const ENV = {
-  VITE_API_BASE_URL: import.meta.env.VITE_API_BASE_URL
+  VITE_API_BASE_URL: import.meta.env.VITE_API_BASE_URL,
+  VITE_COGNITO_USER_POOL_ID: import.meta.env.VITE_COGNITO_USER_POOL_ID,
+  VITE_COGNITO_USER_POOL_CLIENT_ID: import.meta.env.VITE_COGNITO_USER_POOL_CLIENT_ID
 } as const

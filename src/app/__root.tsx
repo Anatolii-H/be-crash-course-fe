@@ -2,17 +2,20 @@ import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
 import { MantineConfigProvider, QueryClientConfigProvider } from '~/core/providers'
+import { SessionInitializer } from '~/core/providers/session-initializer'
 
 export const Route = createRootRoute({
-  component: rootComponent
+  component: RootComponent
 })
 
-function rootComponent() {
+function RootComponent() {
   return (
     <>
       <QueryClientConfigProvider>
         <MantineConfigProvider>
-          <Outlet />
+          <SessionInitializer>
+            <Outlet />
+          </SessionInitializer>
         </MantineConfigProvider>
       </QueryClientConfigProvider>
 

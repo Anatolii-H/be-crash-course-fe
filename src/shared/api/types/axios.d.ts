@@ -7,6 +7,8 @@ export interface TAxiosRequestConfig<
   params?: TRequestParameters<Path, Method>['query']
   dynamicKeys?: TRequestParameters<Path, Method>['path']
   _retry?: boolean
+  returnOriginalRequest?: boolean
+  ignoreErrorInterceptor?: boolean
 }
 
 declare module 'axios' {

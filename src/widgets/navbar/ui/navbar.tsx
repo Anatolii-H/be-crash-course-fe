@@ -25,12 +25,11 @@ import { useRouter } from '@tanstack/react-router'
 
 import classes from './navbar.module.css'
 import clsx from 'clsx'
+import { authService } from '~/shared/auth/auth.service'
+import { useAuthStore } from '~/shared/auth/auth.store'
 
-const user = {
-  name: 'Jane Spoonfighter',
-  email: 'janspoon@fighter.dev',
-  image: 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png'
-}
+const USER_IMAGE =
+  'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png'
 
 const tabs = [
   { path: '/', title: 'Home' },
@@ -41,6 +40,7 @@ export const Navbar = () => {
   const { navigate, basepath } = useRouter()
   const theme = useMantineTheme()
   const [userMenuOpened, setUserMenuOpened] = useState(false)
+  const user = useAuthStore(state => state.userProfile)
 
   const items = tabs.map(tab => (
     <Tabs.Tab value={tab.path} key={tab.path}>
@@ -65,9 +65,14 @@ export const Navbar = () => {
             <Menu.Target>
               <UnstyledButton className={clsx(classes.user, userMenuOpened && classes.userActive)}>
                 <Group gap={7}>
-                  <Avatar src={user.image} alt={user.name} radius="xl" size={20} />
+                  <Avatar
+                    src={USER_IMAGE}
+                    alt={`${user?.firstName} ${user?.lastName}`}
+                    radius="xl"
+                    size={20}
+                  />
                   <Text fw={500} size="sm" lh={1} mr={3}>
-                    {user.name}
+                    {user?.firstName} {user?.lastName}
                   </Text>
                   <IconChevronDown size={12} stroke={1.5} />
                 </Group>
@@ -98,7 +103,12 @@ export const Navbar = () => {
               <Menu.Item leftSection={<IconSwitchHorizontal size={16} stroke={1.5} />}>
                 Change account
               </Menu.Item>
-              <Menu.Item leftSection={<IconLogout size={16} stroke={1.5} />}>Logout</Menu.Item>
+              <Menu.Item
+                leftSection={<IconLogout size={16} stroke={1.5} />}
+                onClick={authService.logout}
+              >
+                Logout
+              </Menu.Item>
 
               <Menu.Divider />
 

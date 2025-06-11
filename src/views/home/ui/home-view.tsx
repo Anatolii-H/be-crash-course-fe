@@ -41,8 +41,8 @@ export const HomeView = () => {
     minCommentsCount: Number(minCommentsCount)
   })
 
-  const posts = useMemo(() => data?.data?.data ?? [], [data?.data?.data])
-  const total = useMemo(() => data?.data?.meta?.totalPages ?? 0, [data?.data?.meta?.totalPages])
+  const posts = useMemo(() => data?.data ?? [], [data?.data])
+  const total = useMemo(() => data?.meta.totalPages ?? 0, [data?.meta.totalPages])
 
   return (
     <Box className={classes.root}>
