@@ -39,6 +39,13 @@
 @import '@mantine/core/styles/Radio.css';
 @import '@mantine/core/styles/NumberInput.css';
 @import '@mantine/core/styles/Skeleton.css';
+@import '@mantine/core/styles/Title.css';
+@import '@mantine/core/styles/PasswordInput.css';
+@import '@mantine/core/styles/Checkbox.css';
+@import '@mantine/core/styles/Notification.css';
+
+/* Extensions */
+@import '@mantine/notifications/styles.css';
 
 :root {
   font-size: 62.5%;

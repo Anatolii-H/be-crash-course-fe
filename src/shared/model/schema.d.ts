@@ -3,7 +3,7 @@
  * Do not make direct changes to the file.
  */
 
-/* eslint-disable */
+
 export interface paths {
   "/api/health": {
     get: {
@@ -11,6 +11,35 @@ export interface paths {
         /** @description Default Response */
         200: {
           content: never;
+        };
+      };
+    };
+  };
+  "/api/auth/signup/": {
+    post: {
+      requestBody: {
+        content: {
+          "application/json": {
+            firstName: string;
+            lastName: string;
+            /** Format: email */
+            email: string;
+            password: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        201: {
+          content: {
+            "application/json": {
+              firstName: string;
+              lastName: string;
+              /** Format: email */
+              email: string;
+              sub: string;
+            };
+          };
         };
       };
     };
