@@ -5,6 +5,7 @@ import type { TSignupPayload } from '~/shared/auth/auth.types'
 import { authService } from '~/shared/auth/auth.service'
 import { appNotifications } from '~/shared/lib/notifications.service'
 import { useAuthStore } from '~/shared/auth/auth.store'
+import { AxiosError } from 'axios'
 
 export const useSignupForm = () => {
   const navigate = useNavigate()
@@ -36,8 +37,8 @@ export const useSignupForm = () => {
 
       navigate({ to: '/' })
     } catch (error) {
-      if (error instanceof Error) {
-        appNotifications.show({ message: error.message, type: 'error' })
+      if (error instanceof AxiosError) {
+        appNotifications.show({ message: error.response?.data?.message, type: 'error' })
 
         return
       }
