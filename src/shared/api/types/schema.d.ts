@@ -83,6 +83,8 @@ export interface paths {
               createdAt: string;
               /** Format: date-time */
               updatedAt: string;
+              /** Format: uuid */
+              authorId: string | null;
             };
           };
         };
@@ -108,7 +110,7 @@ export interface paths {
         200: {
           content: {
             "application/json": {
-              data: {
+              data: ({
                   /** Format: uuid */
                   id: string;
                   title: string;
@@ -117,8 +119,10 @@ export interface paths {
                   createdAt: string;
                   /** Format: date-time */
                   updatedAt: string;
+                  /** Format: uuid */
+                  authorId: string | null;
                   commentsCount: number;
-                }[];
+                })[];
               meta: {
                 totalCount: number;
                 totalPages: number;
@@ -152,6 +156,8 @@ export interface paths {
               createdAt: string;
               /** Format: date-time */
               updatedAt: string;
+              /** Format: uuid */
+              authorId: string | null;
             };
           };
         };
@@ -178,7 +184,9 @@ export interface paths {
               createdAt: string;
               /** Format: date-time */
               updatedAt: string;
-              comments: {
+              /** Format: uuid */
+              authorId: string | null;
+              comments: ({
                   /** Format: uuid */
                   id: string;
                   text: string;
@@ -186,7 +194,9 @@ export interface paths {
                   createdAt: string;
                   /** Format: date-time */
                   updatedAt: string;
-                }[];
+                  /** Format: uuid */
+                  authorId: string | null;
+                })[];
             };
           };
         };
@@ -232,6 +242,8 @@ export interface paths {
               createdAt: string;
               /** Format: date-time */
               updatedAt: string;
+              /** Format: uuid */
+              authorId: string | null;
             };
           };
         };
@@ -249,7 +261,7 @@ export interface paths {
         /** @description Default Response */
         200: {
           content: {
-            "application/json": {
+            "application/json": ({
                 /** Format: uuid */
                 id: string;
                 text: string;
@@ -257,7 +269,9 @@ export interface paths {
                 createdAt: string;
                 /** Format: date-time */
                 updatedAt: string;
-              }[];
+                /** Format: uuid */
+                authorId: string | null;
+              })[];
           };
         };
       };
@@ -287,6 +301,8 @@ export interface paths {
               createdAt: string;
               /** Format: date-time */
               updatedAt: string;
+              /** Format: uuid */
+              authorId: string | null;
             };
           };
         };

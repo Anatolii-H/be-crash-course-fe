@@ -44,6 +44,9 @@
 @import '@mantine/core/styles/Checkbox.css';
 @import '@mantine/core/styles/Notification.css';
 @import '@mantine/core/styles/Stepper.css';
+@import '@mantine/core/styles/Divider.css';
+@import '@mantine/core/styles/Table.css';
+@import '@mantine/core/styles/Modal.css';
 
 /* Extensions */
 @import '@mantine/notifications/styles.css';

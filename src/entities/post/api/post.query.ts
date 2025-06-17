@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 
-import type { TGetPostsRequestParameters } from '../model/post.types'
+import type { TGetPostsRequestParameters, TGetPostByIdDynamicKeys } from '../model/post.types'
 import { postsService } from './post.service'
 
 export const useGetPosts = (params: TGetPostsRequestParameters) => {
@@ -16,5 +16,12 @@ export const useGetPosts = (params: TGetPostsRequestParameters) => {
     ],
     queryFn: () => postsService.getPosts(params),
     placeholderData: keepPreviousData
+  })
+}
+
+export const useGetPost = (dynamicKeys: TGetPostByIdDynamicKeys) => {
+  return useQuery({
+    queryKey: [dynamicKeys.postId],
+    queryFn: () => postsService.getPostById(dynamicKeys)
   })
 }

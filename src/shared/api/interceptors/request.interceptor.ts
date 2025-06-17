@@ -1,6 +1,7 @@
 import type { AxiosInstance } from 'axios'
 
 import { authService } from '../../auth/auth.service'
+import { parseDynamicKeys } from '../../lib/general.service'
 
 export const setupRequestInterceptor = (httpClient: AxiosInstance) => {
   httpClient.interceptors.request.use(async config => {
@@ -9,6 +10,13 @@ export const setupRequestInterceptor = (httpClient: AxiosInstance) => {
 
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`
+      }
+
+      if (config.url) {
+        config.url = parseDynamicKeys(
+          config.url,
+          config.dynamicKeys as Record<string, string | number> | undefined
+        )
       }
 
       return config

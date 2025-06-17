@@ -22,6 +22,8 @@ export const setupResponseInterceptor = (httpClient: AxiosInstance) => {
       appNotifications.show({ message: 'Session expired. Please login again.', type: 'error' })
 
       authService.logout()
+    } else if (status === 403) {
+      appNotifications.show({ message: 'Forbidden. Not allowed to perform action', type: 'error' })
     } else if (status === 500) {
       appNotifications.show({ message: 'Server error. Please try again later.', type: 'error' })
     } else {
