@@ -15,6 +15,82 @@ export interface paths {
       };
     };
   };
+  "/api/admin/users/": {
+    get: {
+      parameters: {
+        query?: {
+          page?: number;
+          pageSize?: number;
+          search?: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              data: ({
+                  /** Format: uuid */
+                  id: string;
+                  sub: string;
+                  firstName: string;
+                  lastName: string;
+                  /** Format: email */
+                  email: string;
+                  /** Format: date-time */
+                  createdAt: string;
+                  /** Format: date-time */
+                  updatedAt: string;
+                  /** @enum {string} */
+                  role: "admin" | "user";
+                  isDisabled: boolean;
+                })[];
+              meta: {
+                totalCount: number;
+                totalPages: number;
+                page: number;
+                pageSize: number;
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/users/{userId}/disable/": {
+    post: {
+      parameters: {
+        path: {
+          userId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": boolean;
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/users/{userId}/enable/": {
+    post: {
+      parameters: {
+        path: {
+          userId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": boolean;
+          };
+        };
+      };
+    };
+  };
   "/api/auth/signup/": {
     post: {
       requestBody: {
@@ -38,53 +114,6 @@ export interface paths {
               /** Format: email */
               email: string;
               sub: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  "/api/comments/{commentId}/": {
-    delete: {
-      parameters: {
-        path: {
-          commentId: string;
-        };
-      };
-      responses: {
-        /** @description Default Response */
-        200: {
-          content: never;
-        };
-      };
-    };
-    patch: {
-      parameters: {
-        path: {
-          commentId: string;
-        };
-      };
-      requestBody: {
-        content: {
-          "application/json": {
-            text: string;
-          };
-        };
-      };
-      responses: {
-        /** @description Default Response */
-        200: {
-          content: {
-            "application/json": {
-              /** Format: uuid */
-              id: string;
-              text: string;
-              /** Format: date-time */
-              createdAt: string;
-              /** Format: date-time */
-              updatedAt: string;
-              /** Format: uuid */
-              authorId: string | null;
             };
           };
         };
@@ -184,8 +213,22 @@ export interface paths {
               createdAt: string;
               /** Format: date-time */
               updatedAt: string;
-              /** Format: uuid */
-              authorId: string | null;
+              author: {
+                /** Format: uuid */
+                id: string;
+                sub: string;
+                firstName: string;
+                lastName: string;
+                /** Format: email */
+                email: string;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+                /** @enum {string} */
+                role: "admin" | "user";
+                isDisabled: boolean;
+              };
               comments: ({
                   /** Format: uuid */
                   id: string;
@@ -194,8 +237,22 @@ export interface paths {
                   createdAt: string;
                   /** Format: date-time */
                   updatedAt: string;
-                  /** Format: uuid */
-                  authorId: string | null;
+                  author: {
+                    /** Format: uuid */
+                    id: string;
+                    sub: string;
+                    firstName: string;
+                    lastName: string;
+                    /** Format: email */
+                    email: string;
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
+                    /** @enum {string} */
+                    role: "admin" | "user";
+                    isDisabled: boolean;
+                  };
                 })[];
             };
           };
@@ -309,6 +366,55 @@ export interface paths {
       };
     };
   };
+  "/api/posts/{postId}/comments/{commentId}/": {
+    delete: {
+      parameters: {
+        path: {
+          commentId: string;
+          postId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: never;
+        };
+      };
+    };
+    patch: {
+      parameters: {
+        path: {
+          commentId: string;
+          postId: string;
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": {
+            text: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              /** Format: uuid */
+              id: string;
+              text: string;
+              /** Format: date-time */
+              createdAt: string;
+              /** Format: date-time */
+              updatedAt: string;
+              /** Format: uuid */
+              authorId: string | null;
+            };
+          };
+        };
+      };
+    };
+  };
   "/api/user/": {
     get: {
       responses: {
@@ -327,6 +433,9 @@ export interface paths {
               createdAt: string;
               /** Format: date-time */
               updatedAt: string;
+              /** @enum {string} */
+              role: "admin" | "user";
+              isDisabled: boolean;
             };
           };
         };

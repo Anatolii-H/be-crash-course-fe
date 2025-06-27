@@ -6,12 +6,12 @@ export type TCreateCommentDynamicKeys = TRequestParameters<
 export type TCreateCommentResponsePayload =
   TApiPaths['/api/posts/{postId}/comments/']['post']['responses']['201']['content']['application/json']
 
-export type TEditCommentPayload = TRequestBody<'/api/comments/{commentId}/', 'patch'>
+export type TEditCommentPayload = TRequestBody<'/api/posts/{postId}/comments/{commentId}/', 'patch'>
 export type TEditCommentDynamicKeys = TRequestParameters<
-  '/api/comments/{commentId}/',
+  '/api/posts/{postId}/comments/{commentId}/',
   'patch'
 >['path']
 export type TDeleteCommentDynamicKeys = TRequestParameters<
-  '/api/comments/{commentId}/',
+  '/api/posts/{postId}/comments/{commentId}/',
   'delete'
 >['path']

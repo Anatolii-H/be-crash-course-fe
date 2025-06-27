@@ -1,0 +1,35 @@
+.tableTh {
+  background-color: #2e2e2e;
+
+  &:first-child {
+    border-top-left-radius: 5px;
+  }
+
+  &:last-child {
+    border-top-right-radius: 5px;
+  }
+}
+
+.tableBody {
+  & > tr {
+    height: 6.5rem;
+  }
+}
+
+.tableHead {
+  & > tr {
+    height: 5rem;
+  }
+}
+
+.tableTr {
+  &:hover > td {
+    background-color: #242424;
+  }
+}
+
+.tableScrollContainer {
+  & > div {
+    padding-bottom: 0;
+  }
+}

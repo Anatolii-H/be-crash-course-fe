@@ -1,5 +1,4 @@
-export { PostCard } from './ui/post-card'
-
+export { useCreatePost, useDeletePost, useEditPost } from './api/post.mutation'
 export { useGetPosts, useGetPost } from './api/post.query'
 export { postsService } from './api/post.service'
 
@@ -11,3 +10,5 @@ export type {
   TGetPostsRequestParametersSortOrder,
   TGetPostByIdDynamicKeys
 } from './model/post.types'
+
+export { PostCard } from './ui/post-card'

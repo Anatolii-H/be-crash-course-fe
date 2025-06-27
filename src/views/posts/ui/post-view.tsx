@@ -15,14 +15,10 @@ import {
 import { IconPencil, IconTrash } from '@tabler/icons-react'
 import { useParams, useRouter } from '@tanstack/react-router'
 import { useState } from 'react'
-import {
-  useCreateComment,
-  useDeleteComment,
-  useEditComment
-} from '~/entities/comment/api/comment.mutation'
 
-import { useGetPost } from '~/entities/post'
 import { useAuthStore } from '~/shared/auth/auth.store'
+import { useCreateComment, useEditComment, useDeleteComment } from '~/entities/comment'
+import { useGetPost } from '~/entities/post'
 
 export const PostView = () => {
   const { postId } = useParams({ from: '/posts/$postId' })
@@ -31,6 +27,7 @@ export const PostView = () => {
   const { mutateAsync: createComment } = useCreateComment()
   const { mutateAsync: editComment } = useEditComment()
   const { mutateAsync: deleteComment } = useDeleteComment()
+  const isAdmin = useAuthStore(state => state.userProfile?.role === 'admin')
 
   const [editCommentId, setEditCommentId] = useState<string>('')
   const [editCommentValue, setEditCommentValue] = useState('')
@@ -57,7 +54,7 @@ export const PostView = () => {
   const onEditComment = async () => {
     await editComment({
       body: { text: editCommentValue },
-      dynamicKeys: { commentId: editCommentId }
+      dynamicKeys: { commentId: editCommentId, postId }
     })
     await refetch()
 
@@ -66,7 +63,7 @@ export const PostView = () => {
   }
 
   const onDeleteComment = async (commentId: string) => {
-    await deleteComment({ commentId })
+    await deleteComment({ commentId, postId })
 
     await refetch()
   }
@@ -81,7 +78,7 @@ export const PostView = () => {
             radius={30}
           />
           <Text fz="sm" fw={500}>
-            Created: {comment.createdAt}
+            {comment.author.firstName} {comment.author.lastName}
           </Text>
         </Group>
       </Table.Td>
@@ -90,7 +87,7 @@ export const PostView = () => {
         <Text fz="sm">{comment.text}</Text>
       </Table.Td>
       <Table.Td>
-        {comment.authorId === userProfileId && (
+        {(comment.author.id === userProfileId || isAdmin) && (
           <Group gap={0} justify="flex-end">
             <ActionIcon variant="subtle" color="gray" onClick={() => onEdit(comment)}>
               <IconPencil size={16} stroke={1.5} />

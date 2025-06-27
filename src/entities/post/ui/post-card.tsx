@@ -15,6 +15,7 @@ type TPostCardProps = {
 export const PostCard = ({ post, onEdit, onDelete }: TPostCardProps) => {
   const theme = useMantineTheme()
   const userProfileId = useAuthStore(state => state.userProfile?.id)
+  const isAdmin = useAuthStore(state => state.userProfile?.role === 'admin')
 
   return (
     <Card withBorder radius="md" className={classes.card}>
@@ -42,7 +43,7 @@ export const PostCard = ({ post, onEdit, onDelete }: TPostCardProps) => {
       <Group justify="space-between" className={classes.footer}>
         <Text>Comments: {post.commentsCount}</Text>
 
-        {post.authorId === userProfileId && (
+        {(post.authorId === userProfileId || isAdmin) && (
           <Group gap={8} mr={0}>
             <ActionIcon className={classes.action} onClick={() => onEdit?.(post)}>
               <IconEdit size={16} color={theme.colors.lime[7]} />

@@ -4,7 +4,7 @@ import type { TUserProfile, TUserAttributes } from './auth.types'
 import { authService } from './auth.service'
 import { httpClient } from '../api/http-client'
 
-interface IAuthState {
+export interface IAuthState {
   isAuthenticated: boolean
   isLoading: boolean
   cognitoUser: TUserAttributes | null

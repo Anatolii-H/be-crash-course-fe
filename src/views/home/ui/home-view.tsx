@@ -16,17 +16,17 @@ import {
 } from '@mantine/core'
 import { useDebouncedState, useDisclosure } from '@mantine/hooks'
 
-import { Footer } from '~/widgets/footer'
-import { Navbar } from '~/widgets/navbar'
-import { PostCard, useGetPosts } from '~/entities/post'
+import { AppCardSkeleton } from '~/shared/ui/app-card-skeleton'
+import { AppRender } from '~/shared/ui/app-render'
+import { PostCard, useGetPosts, useCreatePost, useDeletePost, useEditPost } from '~/entities/post'
 import type {
   TGetPostsRequestParametersSortBy,
   TGetPostsRequestParametersSortOrder
 } from '~/entities/post'
-import { AppCardSkeleton } from '~/shared/ui/app-card-skeleton'
+import { Footer } from '~/widgets/footer'
+import { Navbar } from '~/widgets/navbar'
 
 import classes from './home-view.module.css'
-import { useCreatePost, useDeletePost, useEditPost } from '~/entities/post/api/post.mutation'
 
 export const HomeView = () => {
   const [pagination, setPagination] = useState({ pageIndex: 1, pageSize: 6 })
@@ -163,7 +163,9 @@ export const HomeView = () => {
               </AppCardSkeleton>
             </Box>
 
-            {!posts.length && !isLoading && <Title ta="center">No posts found...</Title>}
+            <AppRender vIf={!posts.length && !isLoading}>
+              <Title ta="center">No posts found...</Title>
+            </AppRender>
 
             <Center>
               <Pagination

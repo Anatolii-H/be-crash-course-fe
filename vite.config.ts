@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
+import { analyzer } from 'vite-bundle-analyzer'
 
 export default defineConfig({
   plugins: [
@@ -12,7 +13,8 @@ export default defineConfig({
       generatedRouteTree: './src/shared/model/routeTree.gen.ts'
     }),
     react(),
-    tsconfigPaths()
+    tsconfigPaths(),
+    analyzer()
   ],
   resolve: {
     alias: {

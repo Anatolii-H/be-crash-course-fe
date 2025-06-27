@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
   Avatar,
   Container,
@@ -33,20 +33,25 @@ const USER_IMAGE =
 
 const tabs = [
   { path: '/', title: 'Home' },
-  { path: 'account', title: 'Account' }
+  { path: '/account', title: 'Account' },
+  { path: '/admin', title: 'Admin', adminOnly: true }
 ]
 
 export const Navbar = () => {
-  const { navigate, basepath } = useRouter()
+  const { navigate, parseLocation } = useRouter()
   const theme = useMantineTheme()
   const [userMenuOpened, setUserMenuOpened] = useState(false)
   const user = useAuthStore(state => state.userProfile)
 
-  const items = tabs.map(tab => (
-    <Tabs.Tab value={tab.path} key={tab.path}>
-      {tab.title}
-    </Tabs.Tab>
-  ))
+  const pathname = useMemo(() => parseLocation().pathname, [parseLocation])
+
+  const items = tabs
+    .filter(tab => (tab.adminOnly ? user?.role === 'admin' : true))
+    .map(tab => (
+      <Tabs.Tab value={tab.path} key={tab.path}>
+        {tab.title}
+      </Tabs.Tab>
+    ))
 
   return (
     <div className={classes.header}>
@@ -132,7 +137,7 @@ export const Navbar = () => {
             list: classes.tabsList,
             tab: classes.tab
           }}
-          value={basepath}
+          value={pathname}
           onChange={value => navigate({ to: value ?? '.' })}
         >
           <Tabs.List>{items}</Tabs.List>

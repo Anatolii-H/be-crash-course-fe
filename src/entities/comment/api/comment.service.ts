@@ -17,13 +17,13 @@ class CommentsService {
   }
 
   public editComment(body: TEditCommentPayload, dynamicKeys: TEditCommentDynamicKeys) {
-    return httpClient.patch('/api/comments/{commentId}/', body, {
+    return httpClient.patch('/api/posts/{postId}/comments/{commentId}/', body, {
       dynamicKeys
     })
   }
 
   public deleteComment(dynamicKeys: TDeleteCommentDynamicKeys) {
-    return httpClient.delete('/api/comments/{commentId}/', {
+    return httpClient.delete('/api/posts/{postId}/comments/{commentId}/', {
       dynamicKeys
     })
   }
