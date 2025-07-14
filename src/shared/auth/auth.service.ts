@@ -1,6 +1,12 @@
 import { signOut, signIn, fetchAuthSession, fetchUserAttributes } from 'aws-amplify/auth'
 
-import type { TLoginPayload, TSignupPayload, TSignupResponse, TUserAttributes } from './auth.types'
+import type {
+  TAcceptUserInvitePayload,
+  TLoginPayload,
+  TSignupPayload,
+  TSignupResponse,
+  TUserAttributes
+} from './auth.types'
 import { httpClient } from '../api/http-client'
 
 export const authService = (() => {
@@ -26,6 +32,13 @@ export const authService = (() => {
     }) as Promise<TSignupResponse>
   }
 
+  const acceptInvitation = (
+    payload: TAcceptUserInvitePayload,
+    ignoreErrorInterceptor = false
+  ): Promise<void> => {
+    return httpClient.post('/api/auth/accept-invite/', payload, { ignoreErrorInterceptor })
+  }
+
   const getAccessToken = () => {
     return fetchAuthSession().then(session => session.tokens?.accessToken.toString())
   }
@@ -49,6 +62,7 @@ export const authService = (() => {
     logout,
     login,
     signup,
+    acceptInvitation,
     getAccessToken,
     verifySession,
     getUserAttributes

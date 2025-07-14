@@ -1,4 +1,4 @@
-export { useDisableUser, useEnableUser } from './api/user.mutation'
+export { useDisableUser, useEnableUser, useInviteUser, useResendInvite } from './api/user.mutation'
 export { useGetUsers } from './api/user.query'
 export { usersService } from './api/user.service'
 
@@ -7,5 +7,7 @@ export type {
   TEnableUserDynamicKeys,
   TGetUsersRequestParams,
   TUsersReponse,
-  TUsersReponseItem
+  TUsersReponseItem,
+  TInviteUserPayload,
+  TResendUserInviteDynamicKeys
 } from './model/user.types'

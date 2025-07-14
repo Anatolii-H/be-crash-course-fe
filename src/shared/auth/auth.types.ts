@@ -18,3 +18,5 @@ export type TSignupPayload = TRequestBody<'/api/auth/signup/', 'post'>
 export type TUserProfile = TResponse<'/api/user/', 'get'>
 export type TSignupResponse =
   TApiPaths['/api/auth/signup/']['post']['responses']['201']['content']['application/json']
+
+export type TAcceptUserInvitePayload = TRequestBody<'/api/auth/accept-invite/', 'post'>

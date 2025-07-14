@@ -47,7 +47,7 @@ import type {
 } from '@tanstack/react-table'
 
 import clsx from 'clsx'
-import { AppEmpty } from './app-empty'
+import { AppEmpty } from '../app-empty'
 
 import classes from './app-table-module.module.css'
 

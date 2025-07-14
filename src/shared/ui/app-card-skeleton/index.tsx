@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import { Box, type BoxProps, Skeleton } from '@mantine/core'
 
-import type { TChildrenProps, TClassNameProps } from '../model/global.types'
+import type { TChildrenProps, TClassNameProps } from '../../model/global.types'
 
 import classes from './app-card-skeleton.module.css'
 

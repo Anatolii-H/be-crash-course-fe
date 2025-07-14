@@ -22,9 +22,10 @@ import {
   IconTrash
 } from '@tabler/icons-react'
 import { useRouter } from '@tanstack/react-router'
+import clsx from 'clsx'
 
 import classes from './navbar.module.css'
-import clsx from 'clsx'
+
 import { authService } from '~/shared/auth/auth.service'
 import { useAuthStore } from '~/shared/auth/auth.store'
 
@@ -33,7 +34,6 @@ const USER_IMAGE =
 
 const tabs = [
   { path: '/', title: 'Home' },
-  { path: '/account', title: 'Account' },
   { path: '/admin', title: 'Admin', adminOnly: true }
 ]
 

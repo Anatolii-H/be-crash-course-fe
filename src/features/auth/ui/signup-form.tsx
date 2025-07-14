@@ -1,5 +1,5 @@
 import { Button, Container, Paper, PasswordInput, Text, TextInput, Title } from '@mantine/core'
-import { Link } from '@tanstack/react-router'
+import { Link, useSearch } from '@tanstack/react-router'
 
 import { useSignupForm } from '../lib/use-signup-form'
 
@@ -7,6 +7,9 @@ import classes from './login-form.module.css'
 
 export const SignupForm = () => {
   const { form, onSubmit } = useSignupForm()
+  const { signature } = useSearch({ from: '/signup' })
+
+  const isAcceptingInvite = Boolean(signature)
 
   return (
     <Container size={420} my={40}>
@@ -44,8 +47,9 @@ export const SignupForm = () => {
             placeholder="example@gmail.com"
             radius="md"
             mt="md"
-            withAsterisk
+            withAsterisk={!isAcceptingInvite}
             key={form.key('email')}
+            disabled={isAcceptingInvite}
             {...form.getInputProps('email')}
           />
 

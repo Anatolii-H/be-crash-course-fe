@@ -2,9 +2,11 @@ import { ActionIcon, Badge, Card, Group, Image, Text, useMantineTheme } from '@m
 import { Link } from '@tanstack/react-router'
 import { IconEdit, IconTrash } from '@tabler/icons-react'
 
-import classes from './post-card.module.css'
-import type { TGetPostsResponseItem } from '../model/post.types'
 import { useAuthStore } from '~/shared/auth/auth.store'
+
+import type { TGetPostsResponseItem } from '../model/post.types'
+
+import classes from './post-card.module.css'
 
 type TPostCardProps = {
   post: TGetPostsResponseItem

@@ -8,7 +8,11 @@ export type {
   TGetPostsResponseItems,
   TGetPostsRequestParametersSortBy,
   TGetPostsRequestParametersSortOrder,
-  TGetPostByIdDynamicKeys
+  TGetPostByIdDynamicKeys,
+  TCreatePostBody,
+  TDeletePostDynamicKeys,
+  TEditPostBody,
+  TEditPostDynamicKeys
 } from './model/post.types'
 
 export { PostCard } from './ui/post-card'

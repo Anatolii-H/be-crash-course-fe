@@ -27,8 +27,6 @@ export const setupResponseInterceptor = (httpClient: AxiosInstance) => {
     } else if (status === 500) {
       appNotifications.show({ message: 'Server error. Please try again later.', type: 'error' })
     } else {
-      console.log('error')
-      console.log('error', error)
       const message = error.message || 'Unexpected error'
 
       appNotifications.show({ message, type: 'error' })

@@ -43,6 +43,7 @@ export interface paths {
                   updatedAt: string;
                   /** @enum {string} */
                   role: "admin" | "user";
+                  isPending: boolean;
                   isDisabled: boolean;
                 })[];
               meta: {
@@ -87,6 +88,62 @@ export interface paths {
           content: {
             "application/json": boolean;
           };
+        };
+      };
+    };
+  };
+  "/api/admin/users/{userId}/resend-invite/": {
+    post: {
+      parameters: {
+        path: {
+          userId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: never;
+        };
+      };
+    };
+  };
+  "/api/admin/users/invite/": {
+    post: {
+      requestBody: {
+        content: {
+          "application/json": {
+            /** Format: email */
+            email: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: never;
+        };
+      };
+    };
+  };
+  "/api/auth/accept-invite/": {
+    post: {
+      requestBody: {
+        content: {
+          "application/json": {
+            firstName: string;
+            lastName: string;
+            /** Format: email */
+            email: string;
+            password: string;
+            expireAt: number;
+            signature: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: never;
         };
       };
     };
@@ -227,6 +284,7 @@ export interface paths {
                 updatedAt: string;
                 /** @enum {string} */
                 role: "admin" | "user";
+                isPending: boolean;
                 isDisabled: boolean;
               };
               comments: ({
@@ -251,6 +309,7 @@ export interface paths {
                     updatedAt: string;
                     /** @enum {string} */
                     role: "admin" | "user";
+                    isPending: boolean;
                     isDisabled: boolean;
                   };
                 })[];
@@ -435,6 +494,7 @@ export interface paths {
               updatedAt: string;
               /** @enum {string} */
               role: "admin" | "user";
+              isPending: boolean;
               isDisabled: boolean;
             };
           };

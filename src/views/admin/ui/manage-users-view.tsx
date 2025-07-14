@@ -1,15 +1,24 @@
 import { useMemo, useState } from 'react'
-import { Container, Flex, Text, TextInput } from '@mantine/core'
-import { useDebouncedState } from '@mantine/hooks'
+import { Badge, Button, Container, Flex, Modal, Text, TextInput } from '@mantine/core'
+import { useDebouncedState, useDisclosure } from '@mantine/hooks'
 import { createColumnHelper, type PaginationState } from '@tanstack/react-table'
 import { IconUserFilled } from '@tabler/icons-react'
 import clsx from 'clsx'
 
-import { AppRender } from '~/shared/ui/app-render'
-import { useAuthStore } from '~/shared/auth/auth.store'
-import { useDisableUser, useEnableUser, useGetUsers, type TUsersReponseItem } from '~/entities/user'
+import { AppTableLoading } from '~/shared/ui/app-table-loading'
 import { AppTableActions } from '~/shared/ui/app-table-actions'
 import { AppTableModule } from '~/shared/ui/app-table-module'
+import { AppRender } from '~/shared/ui/app-render'
+import { useAuthStore } from '~/shared/auth/auth.store'
+import {
+  useDisableUser,
+  useEnableUser,
+  useGetUsers,
+  useInviteUser,
+  useResendInvite,
+  type TUsersReponseItem
+} from '~/entities/user'
+
 import { Navbar } from '~/widgets/navbar'
 
 import classes from './manage-users-view.module.css'
@@ -17,14 +26,24 @@ import classes from './manage-users-view.module.css'
 const columnsHelper = createColumnHelper<TUsersReponseItem>()
 
 export const ManageUsersView = () => {
+  const [opened, { open, close }] = useDisclosure(false)
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 5 })
+  const [inviteEmail, setInviteEmail] = useState('')
   const [search, setSearch] = useDebouncedState('', 250)
+
   const profileId = useAuthStore(state => state.userProfile?.id)
 
-  const { mutateAsync: disableUser } = useDisableUser()
-  const { mutateAsync: enableUser } = useEnableUser()
+  const { mutateAsync: disableUser, isPending: isDisablingUser } = useDisableUser()
+  const { mutateAsync: enableUser, isPending: isEnablingUser } = useEnableUser()
+  const { mutateAsync: inviteUser, isPending: isInvitingUser } = useInviteUser()
+  const { mutateAsync: resendInvite, isPending: isResendingInvite } = useResendInvite()
 
-  const { data: users, refetch } = useGetUsers({
+  const {
+    data: users,
+    refetch,
+    isLoading: isUsersLoading,
+    isFetched: isUsersFetched
+  } = useGetUsers({
     page: pagination.pageIndex + 1,
     pageSize: pagination.pageSize,
     search
@@ -81,6 +100,24 @@ export const ManageUsersView = () => {
           )
         }
       }),
+      columnsHelper.accessor('isPending', {
+        header: 'Email',
+        id: 'isPending',
+        enableSorting: false,
+        cell: ({ row }) => {
+          return (
+            <>
+              {row.original.isDisabled ? (
+                <Badge color="red">Disabled</Badge>
+              ) : row.original.isPending ? (
+                <Badge color="yellow">Pending</Badge>
+              ) : (
+                <Badge color="green">Active</Badge>
+              )}
+            </>
+          )
+        }
+      }),
       columnsHelper.display({
         id: 'actions',
         header: 'Actions',
@@ -90,18 +127,25 @@ export const ManageUsersView = () => {
 
           return (
             <AppTableActions
+              isDisabled={profileId === userId}
               actions={[
                 {
                   title: 'Enable',
                   action: 'enable',
-                  color: 'red',
-                  disabled: !row.original.isDisabled || profileId === userId
+                  color: 'green',
+                  hidden: !row.original.isDisabled || profileId === userId
                 },
                 {
                   title: 'Disable',
                   action: 'disable',
                   color: 'red',
-                  disabled: row.original.isDisabled || profileId === userId
+                  hidden: row.original.isDisabled || profileId === userId
+                },
+                {
+                  title: 'Resend Invite',
+                  action: 'resendInvite',
+                  color: 'yellow',
+                  hidden: !row.original.isPending
                 }
               ]}
               onEnable={async () => {
@@ -112,34 +156,80 @@ export const ManageUsersView = () => {
                 await disableUser({ userId })
                 await refetch()
               }}
+              onResendInvite={async () => {
+                await resendInvite({ userId })
+              }}
               showDelete={false}
             />
           )
         }
       })
     ],
-    [disableUser, enableUser, refetch, profileId]
+    [disableUser, enableUser, refetch, resendInvite, profileId]
   )
 
   return (
-    <div>
-      <Navbar />
+    <>
+      <div>
+        <Navbar />
 
-      <Container>
+        <Container>
+          <Flex justify="space-between">
+            <TextInput
+              mb="md"
+              placeholder="Search by name or email..."
+              maw={300}
+              defaultValue={search}
+              onChange={event => setSearch(event.currentTarget.value)}
+            />
+            <Button type="button" onClick={open}>
+              Invite
+            </Button>
+          </Flex>
+          <AppTableLoading
+            isSkeleton={isUsersLoading}
+            isLoadingOverlay={
+              !isUsersFetched || isDisablingUser || isEnablingUser || isResendingInvite
+            }
+          >
+            <AppTableModule
+              data={users?.data ?? []}
+              columns={columns}
+              onPaginationChange={setPagination}
+              paginationOptions={paginationOptions}
+            />
+          </AppTableLoading>
+        </Container>
+      </div>
+
+      <Modal
+        opened={opened}
+        onClose={() => {
+          close()
+        }}
+        title="Invite user"
+        centered
+      >
         <TextInput
           mb="md"
-          placeholder="Search by name or email..."
-          maw={300}
-          defaultValue={search}
-          onChange={event => setSearch(event.currentTarget.value)}
+          value={inviteEmail}
+          placeholder="Email"
+          onChange={event => setInviteEmail(event.currentTarget.value)}
         />
-        <AppTableModule
-          data={users?.data ?? []}
-          columns={columns}
-          onPaginationChange={setPagination}
-          paginationOptions={paginationOptions}
-        />
-      </Container>
-    </div>
+
+        <Button
+          mt="md"
+          onClick={async () => {
+            await inviteUser({ email: inviteEmail })
+            await refetch()
+            close()
+            setInviteEmail('')
+          }}
+          loading={isInvitingUser}
+        >
+          Invite
+        </Button>
+      </Modal>
+    </>
   )
 }

@@ -29,16 +29,16 @@ import { Navbar } from '~/widgets/navbar'
 import classes from './home-view.module.css'
 
 export const HomeView = () => {
-  const [pagination, setPagination] = useState({ pageIndex: 1, pageSize: 6 })
   const [search, setSearch] = useDebouncedState('', 300)
+  const [pagination, setPagination] = useState({ pageIndex: 1, pageSize: 6 })
   const [sortBy, setSortBy] = useState<TGetPostsRequestParametersSortBy | null>(null)
   const [minCommentsCount, setMinCommentsCount] = useState<string | number>(0)
   const [sortOrder, setSortOrder] = useState<TGetPostsRequestParametersSortOrder>('asc')
-  const [opened, { open, close }] = useDisclosure(false)
-  const { mutateAsync: deletePost } = useDeletePost()
-  const [isCreatingPost, setIsCreatingPost] = useState(false)
-  const { mutateAsync: editPost } = useEditPost()
-  const { mutateAsync: createPost } = useCreatePost()
+  const [isCreatingPostMode, setIsCreatingPostMode] = useState(false)
+  const [isPostModalOpened, { open: openPostModal, close: closePostModal }] = useDisclosure(false)
+  const { mutateAsync: deletePost, isPending: isDeletingPost } = useDeletePost()
+  const { mutateAsync: editPost, isPending: isEditingPost } = useEditPost()
+  const { mutateAsync: createPost, isPending: isCreatingPost } = useCreatePost()
 
   const [editPostPayload, setEditPostPayload] = useState({
     title: '',
@@ -46,7 +46,13 @@ export const HomeView = () => {
     id: ''
   })
 
-  const { data, isLoading, isFetched, refetch } = useGetPosts({
+  const {
+    data,
+    isLoading: isPostsLoading,
+    isRefetching: isPostsRefetching,
+    isFetched: isPostsFetched,
+    refetch: refetchPosts
+  } = useGetPosts({
     page: pagination.pageIndex,
     pageSize: pagination.pageSize,
     sortBy: sortBy ?? undefined,
@@ -59,17 +65,17 @@ export const HomeView = () => {
   const total = useMemo(() => data?.meta.totalPages ?? 0, [data?.meta.totalPages])
 
   const onSubmitPost = async () => {
-    if (isCreatingPost) {
+    if (isCreatingPostMode) {
       await createPost(editPostPayload)
     } else {
       await editPost({ body: editPostPayload, dynamicKeys: { postId: editPostPayload.id } })
     }
 
-    await refetch()
+    await refetchPosts()
 
-    close()
+    closePostModal()
 
-    setIsCreatingPost(false)
+    setIsCreatingPostMode(false)
     setEditPostPayload({
       title: '',
       description: '',
@@ -128,8 +134,8 @@ export const HomeView = () => {
             <Button
               mb="md"
               onClick={() => {
-                setIsCreatingPost(true)
-                open()
+                setIsCreatingPostMode(true)
+                openPostModal()
               }}
             >
               Add new post
@@ -137,17 +143,17 @@ export const HomeView = () => {
 
             <Box className={classes.blogWrapper}>
               <LoadingOverlay
-                visible={!isFetched && !isLoading}
+                visible={(!isPostsFetched && !isPostsLoading) || isDeletingPost}
                 overlayProps={{ radius: 'sm', blur: 2 }}
               />
-              <AppCardSkeleton isLoading={isLoading}>
+              <AppCardSkeleton isLoading={isPostsLoading}>
                 {posts.map(post => (
                   <PostCard
                     key={post.id}
                     post={post}
                     onDelete={async post => {
                       await deletePost({ postId: post.id })
-                      await refetch()
+                      await refetchPosts()
                     }}
                     onEdit={post => {
                       setEditPostPayload({
@@ -156,14 +162,14 @@ export const HomeView = () => {
                         id: post.id
                       })
 
-                      open()
+                      openPostModal()
                     }}
                   />
                 ))}
               </AppCardSkeleton>
             </Box>
 
-            <AppRender vIf={!posts.length && !isLoading}>
+            <AppRender vIf={!posts.length && !isPostsLoading}>
               <Title ta="center">No posts found...</Title>
             </AppRender>
 
@@ -182,11 +188,11 @@ export const HomeView = () => {
       </Box>
 
       <Modal
-        opened={opened}
+        opened={isPostModalOpened}
         onClose={() => {
-          close()
+          closePostModal()
           setEditPostPayload({ title: '', description: '', id: '' })
-          setIsCreatingPost(false)
+          setIsCreatingPostMode(false)
         }}
         title="Edit post"
         centered
@@ -206,8 +212,12 @@ export const HomeView = () => {
             setEditPostPayload({ ...editPostPayload, description: event.currentTarget.value })
           }
         />
-        <Button mt="md" onClick={onSubmitPost}>
-          Edit
+        <Button
+          mt="md"
+          onClick={onSubmitPost}
+          loading={isCreatingPost || isPostsRefetching || isEditingPost}
+        >
+          {isCreatingPostMode ? 'Create' : 'Edit'}
         </Button>
       </Modal>
     </>

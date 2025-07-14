@@ -12,3 +12,8 @@ export type TEnableUserDynamicKeys = TRequestParameters<
 
 export type TUsersReponse = TResponse<'/api/admin/users/', 'get'>
 export type TUsersReponseItem = TResponse<'/api/admin/users/', 'get'>['data'][number]
+export type TInviteUserPayload = TRequestBody<'/api/admin/users/invite/', 'post'>
+export type TResendUserInviteDynamicKeys = TRequestParameters<
+  '/api/admin/users/{userId}/resend-invite/',
+  'post'
+>['path']

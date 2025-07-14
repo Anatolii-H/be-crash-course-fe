@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import type { LoadingOverlayProps } from '@mantine/core'
 import { Box, LoadingOverlay, Skeleton } from '@mantine/core'
 
-import type { TClassNameProps } from '../model/global.types'
+import type { TClassNameProps } from '../../model/global.types'
 
 type TAppTableListSkeletonProps = TClassNameProps & {
   children: ReactNode
@@ -18,7 +18,7 @@ type TAppTableListSkeletonProps = TClassNameProps & {
   displayCircle?: boolean
 }
 
-export const AppTableListSkeleton = ({
+export const AppTableLoading = ({
   isSkeleton,
   isLoadingOverlay,
   loadingOverlayProps,
@@ -33,7 +33,7 @@ export const AppTableListSkeleton = ({
 }: TAppTableListSkeletonProps) => {
   if (!isSkeleton) {
     return (
-      <Box className={clsx('relative', className)}>
+      <Box className={clsx(className)} style={{ position: 'relative' }}>
         <LoadingOverlay visible={isLoadingOverlay} {...loadingOverlayProps} />
 
         {children}

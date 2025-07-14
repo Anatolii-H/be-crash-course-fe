@@ -23,9 +23,9 @@ import { useGetPost } from '~/entities/post'
 export const PostView = () => {
   const { postId } = useParams({ from: '/posts/$postId' })
   const { navigate } = useRouter()
-  const { data: post, isLoading: isPostFetching, refetch } = useGetPost({ postId })
-  const { mutateAsync: createComment } = useCreateComment()
-  const { mutateAsync: editComment } = useEditComment()
+  const { data: post, isLoading: isPostFetching, refetch: refetchPost } = useGetPost({ postId })
+  const { mutateAsync: createComment, isPending: isCreatingComment } = useCreateComment()
+  const { mutateAsync: editComment, isPending: isEditingComment } = useEditComment()
   const { mutateAsync: deleteComment } = useDeleteComment()
   const isAdmin = useAuthStore(state => state.userProfile?.role === 'admin')
 
@@ -46,7 +46,7 @@ export const PostView = () => {
 
   const onCreateComment = async () => {
     await createComment({ body: { text: newCommentValue }, dynamicKeys: { postId } })
-    await refetch()
+    await refetchPost()
 
     setNewCommentValue('')
   }
@@ -56,7 +56,7 @@ export const PostView = () => {
       body: { text: editCommentValue },
       dynamicKeys: { commentId: editCommentId, postId }
     })
-    await refetch()
+    await refetchPost()
 
     setEditCommentId('')
     setEditCommentValue('')
@@ -65,7 +65,7 @@ export const PostView = () => {
   const onDeleteComment = async (commentId: string) => {
     await deleteComment({ commentId, postId })
 
-    await refetch()
+    await refetchPost()
   }
 
   const rows = post?.comments.map(comment => (
@@ -139,7 +139,7 @@ export const PostView = () => {
           value={newCommentValue}
           onChange={event => setNewCommentValue(event.currentTarget.value)}
         />
-        <Button type="button" onClick={onCreateComment}>
+        <Button type="button" onClick={onCreateComment} loading={isCreatingComment}>
           Add comment
         </Button>
       </Group>
@@ -152,7 +152,7 @@ export const PostView = () => {
             value={editCommentValue}
             onChange={event => setEditCommentValue(event.currentTarget.value)}
           />
-          <Button type="button" onClick={onEditComment}>
+          <Button type="button" onClick={onEditComment} loading={isEditingComment}>
             Update
           </Button>
         </Group>
