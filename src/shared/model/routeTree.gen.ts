@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './../../app/__root'
+import { Route as TagsImport } from './../../app/tags'
 import { Route as SignupImport } from './../../app/signup'
 import { Route as ResetPasswordImport } from './../../app/reset-password'
 import { Route as LoginImport } from './../../app/login'
@@ -19,6 +20,12 @@ import { Route as IndexImport } from './../../app/index'
 import { Route as PostsPostIdImport } from './../../app/posts/$postId'
 
 // Create/Update Routes
+
+const TagsRoute = TagsImport.update({
+  id: '/tags',
+  path: '/tags',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const SignupRoute = SignupImport.update({
   id: '/signup',
@@ -95,6 +102,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupImport
       parentRoute: typeof rootRoute
     }
+    '/tags': {
+      id: '/tags'
+      path: '/tags'
+      fullPath: '/tags'
+      preLoaderRoute: typeof TagsImport
+      parentRoute: typeof rootRoute
+    }
     '/posts/$postId': {
       id: '/posts/$postId'
       path: '/posts/$postId'
@@ -113,6 +127,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
+  '/tags': typeof TagsRoute
   '/posts/$postId': typeof PostsPostIdRoute
 }
 
@@ -122,6 +137,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
+  '/tags': typeof TagsRoute
   '/posts/$postId': typeof PostsPostIdRoute
 }
 
@@ -132,6 +148,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
+  '/tags': typeof TagsRoute
   '/posts/$postId': typeof PostsPostIdRoute
 }
 
@@ -143,6 +160,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/reset-password'
     | '/signup'
+    | '/tags'
     | '/posts/$postId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -151,6 +169,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/reset-password'
     | '/signup'
+    | '/tags'
     | '/posts/$postId'
   id:
     | '__root__'
@@ -159,6 +178,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/reset-password'
     | '/signup'
+    | '/tags'
     | '/posts/$postId'
   fileRoutesById: FileRoutesById
 }
@@ -169,6 +189,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SignupRoute: typeof SignupRoute
+  TagsRoute: typeof TagsRoute
   PostsPostIdRoute: typeof PostsPostIdRoute
 }
 
@@ -178,6 +199,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SignupRoute: SignupRoute,
+  TagsRoute: TagsRoute,
   PostsPostIdRoute: PostsPostIdRoute,
 }
 
@@ -196,6 +218,7 @@ export const routeTree = rootRoute
         "/login",
         "/reset-password",
         "/signup",
+        "/tags",
         "/posts/$postId"
       ]
     },
@@ -213,6 +236,9 @@ export const routeTree = rootRoute
     },
     "/signup": {
       "filePath": "signup.tsx"
+    },
+    "/tags": {
+      "filePath": "tags.tsx"
     },
     "/posts/$postId": {
       "filePath": "posts/$postId.tsx"

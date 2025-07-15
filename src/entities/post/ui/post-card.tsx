@@ -30,9 +30,13 @@ export const PostCard = ({ post, onEdit, onDelete }: TPostCardProps) => {
         </Link>
       </Card.Section>
 
-      <Badge className={classes.rating} variant="gradient" gradient={{ from: 'green', to: 'lime' }}>
-        outstanding
-      </Badge>
+      <div className={classes.rating}>
+        {post.tags.map(tag => (
+          <Badge mr="xs" key={tag.id} variant="gradient" gradient={{ from: 'green', to: 'lime' }}>
+            {tag.name}
+          </Badge>
+        ))}
+      </div>
 
       <Text className={classes.title} fw={500}>
         {post.title}

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   Box,
   Center,
@@ -12,13 +12,15 @@ import {
   Title,
   NumberInput,
   Modal,
-  Button
+  Button,
+  MultiSelect
 } from '@mantine/core'
 import { useDebouncedState, useDisclosure } from '@mantine/hooks'
 
 import { AppCardSkeleton } from '~/shared/ui/app-card-skeleton'
 import { AppRender } from '~/shared/ui/app-render'
 import { PostCard, useGetPosts, useCreatePost, useDeletePost, useEditPost } from '~/entities/post'
+import { useGetTags } from '~/entities/tag'
 import type {
   TGetPostsRequestParametersSortBy,
   TGetPostsRequestParametersSortOrder
@@ -35,15 +37,18 @@ export const HomeView = () => {
   const [minCommentsCount, setMinCommentsCount] = useState<string | number>(0)
   const [sortOrder, setSortOrder] = useState<TGetPostsRequestParametersSortOrder>('asc')
   const [isCreatingPostMode, setIsCreatingPostMode] = useState(false)
+  const [filterTagIds, setFilterTagIds] = useState<string[]>([])
   const [isPostModalOpened, { open: openPostModal, close: closePostModal }] = useDisclosure(false)
   const { mutateAsync: deletePost, isPending: isDeletingPost } = useDeletePost()
   const { mutateAsync: editPost, isPending: isEditingPost } = useEditPost()
   const { mutateAsync: createPost, isPending: isCreatingPost } = useCreatePost()
+  const { data: tags = [] } = useGetTags()
 
   const [editPostPayload, setEditPostPayload] = useState({
     title: '',
     description: '',
-    id: ''
+    id: '',
+    tagIds: [] as string[]
   })
 
   const {
@@ -58,7 +63,8 @@ export const HomeView = () => {
     sortBy: sortBy ?? undefined,
     sortOrder,
     search,
-    minCommentsCount: Number(minCommentsCount)
+    minCommentsCount: Number(minCommentsCount),
+    tagIds: filterTagIds
   })
 
   const posts = useMemo(() => data?.data ?? [], [data?.data])
@@ -79,9 +85,14 @@ export const HomeView = () => {
     setEditPostPayload({
       title: '',
       description: '',
-      id: ''
+      id: '',
+      tagIds: []
     })
   }
+
+  useEffect(() => {
+    refetchPosts()
+  }, [filterTagIds, refetchPosts])
 
   return (
     <>
@@ -131,6 +142,17 @@ export const HomeView = () => {
               />
             </Box>
 
+            <MultiSelect
+              mb="md"
+              placeholder="# Pick tags"
+              searchable
+              value={filterTagIds}
+              onChange={tags => {
+                setFilterTagIds(tags)
+              }}
+              data={tags.map(({ id, name }) => ({ value: id, label: name }))}
+            />
+
             <Button
               mb="md"
               onClick={() => {
@@ -159,7 +181,8 @@ export const HomeView = () => {
                       setEditPostPayload({
                         title: post.title,
                         description: post.description,
-                        id: post.id
+                        id: post.id,
+                        tagIds: post.tags.map(({ id }) => id)
                       })
 
                       openPostModal()
@@ -191,7 +214,7 @@ export const HomeView = () => {
         opened={isPostModalOpened}
         onClose={() => {
           closePostModal()
-          setEditPostPayload({ title: '', description: '', id: '' })
+          setEditPostPayload({ title: '', description: '', id: '', tagIds: [] })
           setIsCreatingPostMode(false)
         }}
         title="Edit post"
@@ -206,11 +229,22 @@ export const HomeView = () => {
           }
         />
         <TextInput
+          mb="md"
           value={editPostPayload.description}
           placeholder="Description"
           onChange={event =>
             setEditPostPayload({ ...editPostPayload, description: event.currentTarget.value })
           }
+        />
+        <MultiSelect
+          mb="md"
+          placeholder="# Pick tags"
+          searchable
+          value={editPostPayload.tagIds}
+          onChange={tagIds => {
+            setEditPostPayload({ ...editPostPayload, tagIds })
+          }}
+          data={tags.map(({ id, name }) => ({ value: id, label: name }))}
         />
         <Button
           mt="md"

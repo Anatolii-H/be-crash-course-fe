@@ -10,7 +10,8 @@ import {
   Group,
   Avatar,
   ActionIcon,
-  TextInput
+  TextInput,
+  Badge
 } from '@mantine/core'
 import { IconPencil, IconTrash } from '@tabler/icons-react'
 import { useParams, useRouter } from '@tanstack/react-router'
@@ -120,11 +121,20 @@ export const PostView = () => {
       </Button>
 
       <Image
+        mb="md"
         radius="sm"
         maw={400}
         src="https://static.spacecrafted.com/bdcb89ef153b4eb28ffa328995516fbe/i/ca7a4439ea4d401c905ff146f8ada118/1/4SoifmQp45JMgBnHp7ed2/placeholder.png"
         height={180}
       />
+
+      <div>
+        {post?.tags.map(tag => (
+          <Badge mr="xs" key={tag.id} variant="gradient" gradient={{ from: 'green', to: 'lime' }}>
+            {tag.name}
+          </Badge>
+        ))}
+      </div>
 
       <Title mt="sm">{post?.title}</Title>
 

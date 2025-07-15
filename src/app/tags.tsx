@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { AdminGuard } from '~/shared/auth/admin.guard'
-import { ManageUsersView } from '~/views/admin'
+import { ManageTagsView } from '~/views/tags'
 
-export const Route = createFileRoute('/admin')({
-  component: ManageUsersView,
+export const Route = createFileRoute('/tags')({
+  component: ManageTagsView,
   beforeLoad: ({ context }) => AdminGuard(context.auth?.role === 'admin')
 })

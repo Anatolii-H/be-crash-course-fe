@@ -15,6 +15,78 @@ export interface paths {
       };
     };
   };
+  "/api/admin/tags/": {
+    post: {
+      requestBody: {
+        content: {
+          "application/json": {
+            name: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        201: {
+          content: {
+            "application/json": {
+              /** Format: uuid */
+              id: string;
+              name: string;
+              /** Format: date-time */
+              createdAt: string;
+              /** Format: date-time */
+              updatedAt: string;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/tags/{tagId}/": {
+    delete: {
+      parameters: {
+        path: {
+          tagId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: never;
+        };
+      };
+    };
+    patch: {
+      parameters: {
+        path: {
+          tagId: string;
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": {
+            name: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              /** Format: uuid */
+              id: string;
+              name: string;
+              /** Format: date-time */
+              createdAt: string;
+              /** Format: date-time */
+              updatedAt: string;
+            };
+          };
+        };
+      };
+    };
+  };
   "/api/admin/users/": {
     get: {
       parameters: {
@@ -189,6 +261,7 @@ export interface paths {
           sortBy?: "title" | "createdAt" | "commentsCount";
           sortOrder?: "asc" | "desc";
           minCommentsCount?: number;
+          tagIds?: string[];
         };
       };
       responses: {
@@ -208,6 +281,15 @@ export interface paths {
                   /** Format: uuid */
                   authorId: string | null;
                   commentsCount: number;
+                  tags: {
+                      /** Format: uuid */
+                      id: string;
+                      name: string;
+                      /** Format: date-time */
+                      createdAt: string;
+                      /** Format: date-time */
+                      updatedAt: string;
+                    }[];
                 })[];
               meta: {
                 totalCount: number;
@@ -226,6 +308,7 @@ export interface paths {
           "application/json": {
             title: string;
             description?: string;
+            tagIds: string[];
           };
         };
       };
@@ -313,6 +396,15 @@ export interface paths {
                     isDisabled: boolean;
                   };
                 })[];
+              tags: {
+                  /** Format: uuid */
+                  id: string;
+                  name: string;
+                  /** Format: date-time */
+                  createdAt: string;
+                  /** Format: date-time */
+                  updatedAt: string;
+                }[];
             };
           };
         };
@@ -342,6 +434,7 @@ export interface paths {
           "application/json": {
             title: string;
             description?: string;
+            tagIds: string[];
           };
         };
       };
@@ -468,6 +561,51 @@ export interface paths {
               updatedAt: string;
               /** Format: uuid */
               authorId: string | null;
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/tags/": {
+    get: {
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+                /** Format: uuid */
+                id: string;
+                name: string;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+              }[];
+          };
+        };
+      };
+    };
+  };
+  "/api/tags/{tagId}/": {
+    get: {
+      parameters: {
+        path: {
+          tagId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              /** Format: uuid */
+              id: string;
+              name: string;
+              /** Format: date-time */
+              createdAt: string;
+              /** Format: date-time */
+              updatedAt: string;
             };
           };
         };

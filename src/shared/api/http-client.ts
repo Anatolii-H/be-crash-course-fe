@@ -5,7 +5,10 @@ import { setupRequestInterceptor } from './interceptors/request.interceptor'
 import { setupResponseInterceptor } from './interceptors/response.interceptor'
 
 const httpClient = axios.create({
-  baseURL: ENV.VITE_API_BASE_URL
+  baseURL: ENV.VITE_API_BASE_URL,
+  paramsSerializer: {
+    indexes: null
+  }
 })
 
 setupRequestInterceptor(httpClient)
