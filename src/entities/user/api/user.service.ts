@@ -4,8 +4,11 @@ import type {
   TDisableUserDynamicKeys,
   TEnableUserDynamicKeys,
   TGetUsersRequestParams,
+  THardDeleteDynamicKeys,
   TInviteUserPayload,
-  TResendUserInviteDynamicKeys
+  TResendUserInviteDynamicKeys,
+  TSoftDeleteDynamicKeys,
+  TSoftRestoreDynamicKeys
 } from '../model/user.types'
 
 class UsersService {
@@ -45,6 +48,24 @@ class UsersService {
         dynamicKeys
       }
     )
+  }
+
+  public softDelete(dynamicKeys: TSoftDeleteDynamicKeys) {
+    return httpClient.post(
+      '/api/admin/users/{userId}/soft-delete/',
+      {},
+      {
+        dynamicKeys
+      }
+    )
+  }
+
+  public softRestore(dynamicKeys: TSoftRestoreDynamicKeys) {
+    return httpClient.post('/api/admin/users/{userId}/soft-restore/', {}, { dynamicKeys })
+  }
+
+  public hardDelete(dynamicKeys: THardDeleteDynamicKeys) {
+    return httpClient.delete('/api/admin/users/{userId}/', { dynamicKeys })
   }
 }
 

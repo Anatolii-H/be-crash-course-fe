@@ -35,7 +35,8 @@ const USER_IMAGE =
 const tabs = [
   { path: '/', title: 'Home' },
   { path: '/admin', title: 'Manage users', adminOnly: true },
-  { path: '/tags', title: 'Manage tags', adminOnly: true }
+  { path: '/tags', title: 'Manage tags', adminOnly: true },
+  { path: '/archive', title: 'Archive', adminOnly: true }
 ]
 
 export const Navbar = () => {

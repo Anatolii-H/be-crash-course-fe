@@ -14,8 +14,10 @@ import {
   useDisableUser,
   useEnableUser,
   useGetUsers,
+  useHardDeleteUser,
   useInviteUser,
   useResendInvite,
+  useSoftDeleteUser,
   type TUsersReponseItem
 } from '~/entities/user'
 
@@ -27,7 +29,7 @@ const columnsHelper = createColumnHelper<TUsersReponseItem>()
 
 export const ManageUsersView = () => {
   const [opened, { open, close }] = useDisclosure(false)
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 5 })
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
   const [inviteEmail, setInviteEmail] = useState('')
   const [search, setSearch] = useDebouncedState('', 250)
 
@@ -37,6 +39,8 @@ export const ManageUsersView = () => {
   const { mutateAsync: enableUser, isPending: isEnablingUser } = useEnableUser()
   const { mutateAsync: inviteUser, isPending: isInvitingUser } = useInviteUser()
   const { mutateAsync: resendInvite, isPending: isResendingInvite } = useResendInvite()
+  const { mutateAsync: softDeleteUser, isPending: isSoftDeletingUser } = useSoftDeleteUser()
+  const { mutateAsync: hardDeleteUser, isPending: isHardDeletingUser } = useHardDeleteUser()
 
   const {
     data: users,
@@ -142,6 +146,18 @@ export const ManageUsersView = () => {
                   hidden: row.original.isDisabled || profileId === userId
                 },
                 {
+                  title: 'Soft delete',
+                  action: 'softDelete',
+                  color: 'yellow',
+                  hidden: row.original.isDisabled || profileId === userId
+                },
+                {
+                  title: 'Hard delete',
+                  action: 'hardDelete',
+                  color: 'red',
+                  hidden: row.original.isDisabled || profileId === userId
+                },
+                {
                   title: 'Resend Invite',
                   action: 'resendInvite',
                   color: 'yellow',
@@ -159,13 +175,21 @@ export const ManageUsersView = () => {
               onResendInvite={async () => {
                 await resendInvite({ userId })
               }}
+              onSoftDelete={async () => {
+                await softDeleteUser({ userId })
+                await refetch()
+              }}
+              onHardDelete={async () => {
+                await hardDeleteUser({ userId })
+                await refetch()
+              }}
               showDelete={false}
             />
           )
         }
       })
     ],
-    [disableUser, enableUser, refetch, resendInvite, profileId]
+    [disableUser, enableUser, refetch, resendInvite, softDeleteUser, hardDeleteUser, profileId]
   )
 
   return (
@@ -189,7 +213,12 @@ export const ManageUsersView = () => {
           <AppTableLoading
             isSkeleton={isUsersLoading}
             isLoadingOverlay={
-              !isUsersFetched || isDisablingUser || isEnablingUser || isResendingInvite
+              !isUsersFetched ||
+              isDisablingUser ||
+              isEnablingUser ||
+              isResendingInvite ||
+              isSoftDeletingUser ||
+              isHardDeletingUser
             }
           >
             <AppTableModule

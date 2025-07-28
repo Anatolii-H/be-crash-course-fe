@@ -15,6 +15,76 @@ export interface paths {
       };
     };
   };
+  "/api/admin/archive/": {
+    get: {
+      parameters: {
+        query: {
+          entityType: "user";
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+                /** Format: uuid */
+                id: string;
+                /** Format: date-time */
+                archivedAt: string;
+                /** @enum {string} */
+                entityType: "user";
+                /** Format: uuid */
+                entityId: string;
+              }[];
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/archive/{archiveId}/": {
+    get: {
+      parameters: {
+        path: {
+          archiveId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: {
+            "application/json": {
+              /** Format: uuid */
+              id: string;
+              /** Format: date-time */
+              archivedAt: string;
+              /** @enum {string} */
+              entityType: "user";
+              /** Format: uuid */
+              entityId: string;
+              data: {
+                [key: string]: unknown;
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+  "/api/admin/archive/{archiveId}/restore/": {
+    post: {
+      parameters: {
+        path: {
+          archiveId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: never;
+        };
+      };
+    };
+  };
   "/api/admin/tags/": {
     post: {
       requestBody: {
@@ -94,6 +164,7 @@ export interface paths {
           page?: number;
           pageSize?: number;
           search?: string;
+          softDeletedOnly?: boolean;
         };
       };
       responses: {
@@ -117,6 +188,8 @@ export interface paths {
                   role: "admin" | "user";
                   isPending: boolean;
                   isDisabled: boolean;
+                  /** Format: date-time */
+                  deletedAt: string | null;
                 })[];
               meta: {
                 totalCount: number;
@@ -126,6 +199,21 @@ export interface paths {
               };
             };
           };
+        };
+      };
+    };
+  };
+  "/api/admin/users/{userId}/": {
+    delete: {
+      parameters: {
+        path: {
+          userId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: never;
         };
       };
     };
@@ -165,6 +253,36 @@ export interface paths {
     };
   };
   "/api/admin/users/{userId}/resend-invite/": {
+    post: {
+      parameters: {
+        path: {
+          userId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: never;
+        };
+      };
+    };
+  };
+  "/api/admin/users/{userId}/soft-delete/": {
+    post: {
+      parameters: {
+        path: {
+          userId: string;
+        };
+      };
+      responses: {
+        /** @description Default Response */
+        200: {
+          content: never;
+        };
+      };
+    };
+  };
+  "/api/admin/users/{userId}/soft-restore/": {
     post: {
       parameters: {
         path: {
@@ -261,7 +379,7 @@ export interface paths {
           sortBy?: "title" | "createdAt" | "commentsCount";
           sortOrder?: "asc" | "desc";
           minCommentsCount?: number;
-          tagIds?: string[];
+          tagIds?: string | string[];
         };
       };
       responses: {
@@ -279,7 +397,9 @@ export interface paths {
                   /** Format: date-time */
                   updatedAt: string;
                   /** Format: uuid */
-                  authorId: string | null;
+                  authorId: string;
+                  /** Format: date-time */
+                  deletedAt: string | null;
                   commentsCount: number;
                   tags: {
                       /** Format: uuid */
@@ -326,7 +446,9 @@ export interface paths {
               /** Format: date-time */
               updatedAt: string;
               /** Format: uuid */
-              authorId: string | null;
+              authorId: string;
+              /** Format: date-time */
+              deletedAt: string | null;
             };
           };
         };
@@ -353,6 +475,8 @@ export interface paths {
               createdAt: string;
               /** Format: date-time */
               updatedAt: string;
+              /** Format: date-time */
+              deletedAt: string | null;
               author: {
                 /** Format: uuid */
                 id: string;
@@ -369,6 +493,8 @@ export interface paths {
                 role: "admin" | "user";
                 isPending: boolean;
                 isDisabled: boolean;
+                /** Format: date-time */
+                deletedAt: string | null;
               };
               comments: ({
                   /** Format: uuid */
@@ -378,6 +504,10 @@ export interface paths {
                   createdAt: string;
                   /** Format: date-time */
                   updatedAt: string;
+                  /** Format: date-time */
+                  deletedAt: string | null;
+                  /** Format: uuid */
+                  postId: string;
                   author: {
                     /** Format: uuid */
                     id: string;
@@ -394,6 +524,8 @@ export interface paths {
                     role: "admin" | "user";
                     isPending: boolean;
                     isDisabled: boolean;
+                    /** Format: date-time */
+                    deletedAt: string | null;
                   };
                 })[];
               tags: {
@@ -452,7 +584,9 @@ export interface paths {
               /** Format: date-time */
               updatedAt: string;
               /** Format: uuid */
-              authorId: string | null;
+              authorId: string;
+              /** Format: date-time */
+              deletedAt: string | null;
             };
           };
         };
@@ -479,7 +613,11 @@ export interface paths {
                 /** Format: date-time */
                 updatedAt: string;
                 /** Format: uuid */
-                authorId: string | null;
+                authorId: string;
+                /** Format: date-time */
+                deletedAt: string | null;
+                /** Format: uuid */
+                postId: string;
               })[];
           };
         };
@@ -511,7 +649,11 @@ export interface paths {
               /** Format: date-time */
               updatedAt: string;
               /** Format: uuid */
-              authorId: string | null;
+              authorId: string;
+              /** Format: date-time */
+              deletedAt: string | null;
+              /** Format: uuid */
+              postId: string;
             };
           };
         };
@@ -560,7 +702,11 @@ export interface paths {
               /** Format: date-time */
               updatedAt: string;
               /** Format: uuid */
-              authorId: string | null;
+              authorId: string;
+              /** Format: date-time */
+              deletedAt: string | null;
+              /** Format: uuid */
+              postId: string;
             };
           };
         };
@@ -634,6 +780,8 @@ export interface paths {
               role: "admin" | "user";
               isPending: boolean;
               isDisabled: boolean;
+              /** Format: date-time */
+              deletedAt: string | null;
             };
           };
         };

@@ -5,8 +5,11 @@ import { usersService } from './user.service'
 import type {
   TDisableUserDynamicKeys,
   TEnableUserDynamicKeys,
+  THardDeleteDynamicKeys,
   TInviteUserPayload,
-  TResendUserInviteDynamicKeys
+  TResendUserInviteDynamicKeys,
+  TSoftDeleteDynamicKeys,
+  TSoftRestoreDynamicKeys
 } from '../model/user.types'
 
 export const useDisableUser = () => {
@@ -31,5 +34,23 @@ export const useResendInvite = () => {
   return useMutation({
     mutationFn: (dynamicKeys: TResendUserInviteDynamicKeys) =>
       usersService.resendInvite(dynamicKeys)
+  })
+}
+
+export const useSoftDeleteUser = () => {
+  return useMutation({
+    mutationFn: (dynamicKeys: TSoftDeleteDynamicKeys) => usersService.softDelete(dynamicKeys)
+  })
+}
+
+export const useSoftRestoreUser = () => {
+  return useMutation({
+    mutationFn: (dynamicKeys: TSoftRestoreDynamicKeys) => usersService.softRestore(dynamicKeys)
+  })
+}
+
+export const useHardDeleteUser = () => {
+  return useMutation({
+    mutationFn: (dynamicKeys: THardDeleteDynamicKeys) => usersService.hardDelete(dynamicKeys)
   })
 }

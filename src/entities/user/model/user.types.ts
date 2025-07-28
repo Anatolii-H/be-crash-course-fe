@@ -17,3 +17,15 @@ export type TResendUserInviteDynamicKeys = TRequestParameters<
   '/api/admin/users/{userId}/resend-invite/',
   'post'
 >['path']
+export type TSoftDeleteDynamicKeys = TRequestParameters<
+  '/api/admin/users/{userId}/soft-delete/',
+  'post'
+>['path']
+export type TSoftRestoreDynamicKeys = TRequestParameters<
+  '/api/admin/users/{userId}/soft-restore/',
+  'post'
+>['path']
+export type THardDeleteDynamicKeys = TRequestParameters<
+  '/api/admin/users/{userId}/',
+  'delete'
+>['path']

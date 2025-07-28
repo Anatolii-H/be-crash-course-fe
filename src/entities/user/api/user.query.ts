@@ -6,7 +6,13 @@ import type { TGetUsersRequestParams } from '../model/user.types'
 
 export const useGetUsers = (params: TGetUsersRequestParams) => {
   return useQuery({
-    queryKey: ['/api/admin/users', params?.page, params?.pageSize, params?.search],
+    queryKey: [
+      '/api/admin/users',
+      params?.page,
+      params?.pageSize,
+      params?.search,
+      params?.softDeletedOnly
+    ],
     queryFn: () => usersService.getUsers(params),
     placeholderData: keepPreviousData
   })
