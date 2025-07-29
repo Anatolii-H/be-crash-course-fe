@@ -23,17 +23,7 @@ export const ArchiveHardDeletePreviewModal = ({
           <Loader />
         </Center>
       ) : archiveData ? (
-        <pre
-          style={{
-            flex: 1,
-            overflow: 'auto',
-            padding: '1rem',
-            borderRadius: '0.375rem',
-            whiteSpace: 'pre-wrap'
-          }}
-        >
-          {JSON.stringify(archiveData.data, null, 2)}
-        </pre>
+        <pre>{JSON.stringify(archiveData.data, null, 2)}</pre>
       ) : (
         <Text c="red">Failed to load archive data</Text>
       )}
